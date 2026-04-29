@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 # Script pour initialiser et pousser le projet sur GitHub
 # À exécuter depuis le répertoire racine du projet
 

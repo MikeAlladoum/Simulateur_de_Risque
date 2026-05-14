@@ -4,6 +4,23 @@
  * Initialisation et gestion des événements
  */
 
+// Cacher le loader au chargement complet
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loadingIndicator');
+        if (loader) {
+            loader.classList.add('hidden');
+        }
+    }, 300);
+});
+
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loadingIndicator');
+    if (loader) {
+        loader.classList.add('hidden');
+    }
+});
+
 /**
  * Initialise l'application
  */

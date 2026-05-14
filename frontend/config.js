@@ -6,16 +6,34 @@
 
 // Configuration de l'API
 const CONFIG = {
+    // Détection environnement
+    ENVIRONMENT: (() => {
+        const hostname = window.location.hostname;
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return 'development';
+        }
+        return 'production';
+    })(),
+
     // API Backend
-    API: {
-        BASE_URL: 'http://localhost:5000/api',
-        ENDPOINTS: {
-            HEALTH: '/health',
-            SIMULATE: '/simulate',
-            INFO: '/info'
-        },
-        TIMEOUT: 30000  // 30 secondes
-    },
+    API: (() => {
+        const env = CONFIG.ENVIRONMENT;
+        const isDev = env === 'development';
+        
+        return {
+            BASE_URL: isDev 
+                ? 'http://localhost:5000/api'
+                : (window.location.origin + '/api'), // Sur Vercel, utiliser proxy
+            ENDPOINTS: {
+                HEALTH: '/health',
+                SIMULATE: '/simulate',
+                INFO: '/info',
+                SINISTRES_DEFAULT: '/sinistres/default',
+                AUTH_LOGIN: '/auth/login'
+            },
+            TIMEOUT: 30000  // 30 secondes
+        };
+    })(),
 
     // Valeurs par défaut
     DEFAULTS: {

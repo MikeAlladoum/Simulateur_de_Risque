@@ -1,0 +1,17 @@
+{
+  "name": "simulateur-de-risques",
+  "version": "1.0.0",
+  "description": "Simulateur de Risques - Professional Risk Analysis Dashboard",
+  "private": true,
+  "scripts": {
+    "start": "echo 'Static site - served by Vercel'"
+  },
+  "keywords": [
+    "risk",
+    "simulator",
+    "monte-carlo",
+    "analysis"
+  ],
+  "author": "MikeAlladoum",
+  "license": "MIT"
+}

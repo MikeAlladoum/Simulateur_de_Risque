@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Générateur de Cahier Technique PDF - Simulateur_de_Risque
+Générateur de Cahier Technique PDF - Simulateur de Risques Financiers
+Conforme aux normes UCAO-UUT
 """
 
 from reportlab.lib.pagesizes import A4
@@ -9,7 +10,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
-from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
 from datetime import datetime
 
 OUTPUT_FILE = "Cahier_Technique_Simulateur_Risque.pdf"
@@ -20,17 +21,85 @@ def create_pdf():
     styles = getSampleStyleSheet()
     
     # Styles personnalisés
-    title_style = ParagraphStyle(name='CustomTitle', parent=styles['Heading1'], fontSize=28, textColor=colors.HexColor('#0F172A'), spaceAfter=30, alignment=TA_CENTER, fontName='Helvetica-Bold')
+    header_style = ParagraphStyle(name='Header', parent=styles['Normal'], fontSize=10, textColor=colors.HexColor('#334155'), alignment=TA_CENTER, spaceAfter=6, fontName='Helvetica')
+    title_style = ParagraphStyle(name='CustomTitle', parent=styles['Heading1'], fontSize=24, textColor=colors.HexColor('#0F172A'), spaceAfter=20, alignment=TA_CENTER, fontName='Helvetica-Bold')
     section_style = ParagraphStyle(name='SectionH', parent=styles['Heading1'], fontSize=16, textColor=colors.HexColor('#1E293B'), spaceAfter=12, spaceBefore=12, fontName='Helvetica-Bold')
     subtitle_style = ParagraphStyle(name='SubH', parent=styles['Heading2'], fontSize=13, textColor=colors.HexColor('#475569'), spaceAfter=10, fontName='Helvetica-Bold')
     body_style = ParagraphStyle(name='CustomBody', parent=styles['Normal'], fontSize=10, textColor=colors.HexColor('#334155'), alignment=TA_JUSTIFY, spaceAfter=10)
+    small_style = ParagraphStyle(name='SmallText', parent=styles['Normal'], fontSize=9, textColor=colors.HexColor('#64748B'), alignment=TA_CENTER, spaceAfter=6)
     
+    styles.add(header_style)
     styles.add(title_style)
     styles.add(section_style)
     styles.add(subtitle_style)
     styles.add(body_style)
+    styles.add(small_style)
     
-    # ===== PAGE 1 : TITRE =====
+    # ===== PAGE 1 : PAGE DE GARDE =====
+    story.append(Spacer(1, 0.5*cm))
+    story.append(Paragraph("UNIVERSITÉ CATHOLIQUE DE L'AFRIQUE DE L'OUEST", header_style))
+    story.append(Paragraph("Unité Universitaire du Togo — UCAO-UUT", header_style))
+    story.append(Spacer(1, 0.3*cm))
+    story.append(Paragraph("<b>Foi  •  Science  •  Action</b>", small_style))
+    story.append(Spacer(1, 1*cm))
+    story.append(Paragraph("SÉMINAIRE MIDA", header_style))
+    story.append(Paragraph("MI = Mathématiques & Informatique   |   DA = Développement d'Applications", small_style))
+    story.append(Spacer(1, 1.5*cm))
+    story.append(Paragraph("CAHIER TECHNIQUE", title_style))
+    story.append(Spacer(1, 0.5*cm))
+    story.append(Paragraph("Application Web :", header_style))
+    story.append(Paragraph("Simulateur de Risques Financiers", title_style))
+    story.append(Spacer(1, 1.5*cm))
+    
+    # Informations du projet
+    story.append(Paragraph("INFORMATIONS DU PROJET", section_style))
+    info_data = [
+        ['Projet', 'Simulateur de Risques Financiers'],
+        ['Type', 'Application Web (SPA)'],
+        ['Version', 'v1.0.0'],
+        ['Date', '27 avril 2026'],
+        ['Groupe', 'Groupe 8 — Séminaire MIDA'],
+        ['Encadrant', 'M. WOAMEY'],
+        ['Statut', 'En développement'],
+        ['Année académique', '2025 – 2026'],
+        ['Localisation', 'Lomé, Togo']
+    ]
+    info_table = Table(info_data, colWidths=[4*cm, 11*cm])
+    info_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#E2E8F0')),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#F8FAFC')])
+    ]))
+    story.append(info_table)
+    story.append(Spacer(1, 2*cm))
+    story.append(Paragraph("<i>UCAO-UUT  |  Unité Universitaire du Togo</i>", small_style))
+    story.append(Paragraph("<i>Cahier Technique — Simulateur de Risques Financiers</i>", small_style))
+    story.append(Paragraph("<i>UCAO-UUT  |  Séminaire MIDA  |  Groupe 8  |  Encadrant : M. WOAMEY  |  2025-2026</i>", small_style))
+    story.append(PageBreak())
+    
+    # ===== TABLE DES MATIÈRES =====
+    story.append(Paragraph("TABLE DES MATIÈRES", section_style))
+    toc = """
+    <b>1. Vue d'Ensemble</b><br/>
+    <b>2. Architecture Générale</b><br/>
+    <b>3. Frontend</b><br/>
+    <b>4. Backend & API</b><br/>
+    <b>5. Base de Données</b><br/>
+    <b>6. Algorithmes & Simulations</b><br/>
+    <b>7. Sécurité</b><br/>
+    <b>8. Déploiement & Infrastructure</b><br/>
+    <b>9. Maintenance & Monitoring</b><br/>
+    <b>10. Glossaire</b><br/>
+    <b>11. Conclusion</b>
+    """
+    story.append(Paragraph(toc, body_style))
+    story.append(PageBreak())
+    
+    # ===== PAGE 2 : TITRE =====
     story.append(Spacer(1, 2*cm))
     story.append(Paragraph("SIMULATEUR DE RISQUES FINANCIERS", title_style))
     story.append(Paragraph("Cahier Technique Complet", subtitle_style))

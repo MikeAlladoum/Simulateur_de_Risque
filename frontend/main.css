@@ -392,6 +392,213 @@ body {
     margin: 4px 0 0 0;
 }
 
+/* ==================== SINISTRES MODULE ==================== */
+.sinistres-section {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+    padding-bottom: 12px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.section-description {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.sinistres-list {
+    display: grid;
+    gap: 16px;
+}
+
+.sinister-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.sinister-card:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+}
+
+.sinister-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.sinister-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.sinister-description {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.sinister-form-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-column label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.form-column input {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 6px;
+    padding: 10px;
+    color: var(--text-primary);
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.form-column input:focus {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.08);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+/* ==================== SINISTER STATS TABLE ==================== */
+.sinister-stats-section {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.sinister-stats-container h3 {
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.sinister-table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+.sinister-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(15, 23, 42, 0.4);
+}
+
+.sinister-table thead {
+    background: rgba(99, 102, 241, 0.15);
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+}
+
+.sinister-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sinister-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.1);
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.sinister-table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.08);
+}
+
+.sinister-table .highlight {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.contribution-badge {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* ==================== PROFILE SELECTOR ==================== */
+.profile-section {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.profile-btn {
+    background: rgba(15, 23, 42, 0.8);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+    padding: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-family: inherit;
+}
+
+.profile-btn:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.08);
+    transform: translateY(-2px);
+}
+
+.profile-btn.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border-color: var(--primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
 /* ==================== BUTTONS ==================== */
 .btn-simulate {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -517,7 +724,13 @@ body {
 }
 
 .stat-icon {
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--primary);
+    letter-spacing: 0.5px;
 }
 
 .stat-value {

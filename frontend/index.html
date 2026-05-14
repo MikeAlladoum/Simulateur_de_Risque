@@ -23,22 +23,22 @@
 
             <nav class="sidebar-menu">
                 <a href="#" class="menu-item active">
-                    <span class="menu-icon">⚙️</span>
+                    <span class="menu-icon">[S]</span>
                     <span class="menu-label">Simulateur</span>
                 </a>
                 <a href="#" class="menu-item">
-                    <span class="menu-icon">📊</span>
+                    <span class="menu-icon">[H]</span>
                     <span class="menu-label">Historique</span>
                 </a>
                 <a href="#" class="menu-item">
-                    <span class="menu-icon">🔧</span>
+                    <span class="menu-icon">[P]</span>
                     <span class="menu-label">Paramètres</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
                 <div class="footer-badge">
-                    <span class="badge-icon">💰</span>
+                    <span class="badge-icon">F</span>
                     <span class="badge-text">FCFA</span>
                 </div>
                 <p class="footer-text">Simulation Monte Carlo</p>
@@ -61,6 +61,14 @@
                             <span class="status-dot online"></span>
                             <span class="status-text">Serveur actif</span>
                         </div>
+                        
+                        <div class="user-section" id="userSection" style="display: none; margin-left: 30px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px;">
+                            <span style="color: #94A3B8; font-size: 13px;">Utilisateur:</span>
+                            <span id="currentUser" style="color: #64B5F6; font-weight: 600; margin-left: 8px;"></span>
+                            <button id="logoutBtn" style="margin-left: 15px; background: rgba(239, 68, 68, 0.1); color: #F87171; border: 1px solid #F87171; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s;">
+                                Deconnexion
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -69,11 +77,11 @@
             <main class="page-container">
                 <!-- PAGE TITLE SECTION -->
                 <section class="page-intro">
-                    <div class="intro-content">
-                        <h2 class="intro-title">Simulateur de Risques Financiers</h2>
-                        <p class="intro-description">
-                            Analysez et estimez les pertes potentielles à l'aide de la simulation Monte Carlo.
-                            Définissez vos paramètres et obtenez une analyse complète avec visualisations.
+                    <div class="intro-content" style="text-align: center; margin-bottom: 30px;">
+                        <h2 class="intro-title" style="margin: 0 auto; text-align: center;">Simulateur de Risques Financiers</h2>
+                        <p class="intro-description" style="margin: 12px auto; max-width: 700px; text-align: center;">
+                            Analysez et estimez les pertes potentielles a l'aide de la simulation Monte Carlo.<br>
+                            Definissez vos parametres et obtenez une analyse complete avec visualisations.
                         </p>
                     </div>
                 </section>
@@ -89,52 +97,27 @@
                             </div>
 
                             <form id="simulationForm" class="simulation-form">
-                                <!-- Lambda -->
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span class="label-text">Fréquence des sinistres (λ)</span>
-                                        <span class="label-hint">Loi de Poisson</span>
-                                    </label>
-                                    <div class="input-container">
-                                        <input 
-                                            type="number" 
-                                            id="lambda" 
-                                            name="lambda"
-                                            class="form-input"
-                                            value="5" 
-                                            min="0.1" 
-                                            max="100"
-                                            step="0.5"
-                                            placeholder="Ex: 5"
-                                            required
-                                        >
-                                        <span class="input-suffix">sinistres</span>
+                                <!-- Profile Selection -->
+                                <div class="profile-section">
+                                    <div class="section-header">
+                                        <h4 class="section-title">Domaine d\'Activite</h4>
+                                        <p class="section-description">Choisissez votre secteur d\'activite</p>
                                     </div>
-                                    <p class="input-help">Nombre moyen de sinistres attendus</p>
+                                    <div id="profileContainer" class="profile-selector">
+                                        <!-- Charge dynamiquement -->
+                                    </div>
                                 </div>
 
-                                <!-- Mu -->
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span class="label-text">Coût moyen d'un sinistre (μ)</span>
-                                        <span class="label-hint">Loi Exponentielle</span>
-                                    </label>
-                                    <div class="input-container">
-                                        <input 
-                                            type="number" 
-                                            id="mu" 
-                                            name="mu"
-                                            class="form-input"
-                                            value="100" 
-                                            min="1" 
-                                            max="100000"
-                                            step="10"
-                                            placeholder="Ex: 100"
-                                            required
-                                        >
-                                        <span class="input-suffix">FCFA</span>
+                                <!-- Sinistres Configuration Container -->
+                                <div class="sinistres-section">
+                                    <div class="section-header">
+                                        <h4 class="section-title">Types de Sinistres</h4>
+                                        <p class="section-description">Configurez les parametres pour chaque type de sinistre</p>
                                     </div>
-                                    <p class="input-help">Coût moyen en FCFA d'un sinistre</p>
+                                    <div id="sinistreContainer" class="sinistres-list">
+                                        <!-- Charge dynamiquement par js/sinistres.js -->
+                                        <p style="color: #94A3B8; padding: 20px; text-align: center;">Chargement des sinistres...</p>
+                                    </div>
                                 </div>
 
                                 <!-- Num Simulations -->
@@ -158,7 +141,7 @@
                                         >
                                         <span class="input-suffix">runs</span>
                                     </div>
-                                    <p class="input-help">Plus élevé = plus précis mais plus lent</p>
+                                    <p class="input-help">Plus élevé = plus précis mais plus lent (100-1000000)</p>
                                 </div>
 
                                 <!-- Submit Button -->
@@ -184,17 +167,17 @@
                             <div class="stat-card average-card">
                                 <div class="stat-header">
                                     <h4 class="stat-title">Perte Moyenne</h4>
-                                    <span class="stat-icon">📈</span>
+                                    <span class="stat-icon">AVG</span>
                                 </div>
                                 <div class="stat-value" id="statMean">-</div>
-                                <p class="stat-subtitle">Coût moyen attendu</p>
+                                <p class="stat-subtitle">Cout moyen attendu</p>
                             </div>
 
-                            <!-- Médiane -->
+                            <!-- Mediane -->
                             <div class="stat-card median-card">
                                 <div class="stat-header">
-                                    <h4 class="stat-title">Perte Médiane</h4>
-                                    <span class="stat-icon">📊</span>
+                                    <h4 class="stat-title">Perte Mediane</h4>
+                                    <span class="stat-icon">MED</span>
                                 </div>
                                 <div class="stat-value" id="statMedian">-</div>
                                 <p class="stat-subtitle">Valeur du milieu</p>
@@ -204,20 +187,20 @@
                             <div class="stat-card min-card">
                                 <div class="stat-header">
                                     <h4 class="stat-title">Perte Minimale</h4>
-                                    <span class="stat-icon">📉</span>
+                                    <span class="stat-icon">MIN</span>
                                 </div>
                                 <div class="stat-value" id="statMin">-</div>
-                                <p class="stat-subtitle">Meilleur scénario</p>
+                                <p class="stat-subtitle">Meilleur scenario</p>
                             </div>
 
                             <!-- Max -->
                             <div class="stat-card max-card">
                                 <div class="stat-header">
                                     <h4 class="stat-title">Perte Maximale</h4>
-                                    <span class="stat-icon">⚠️</span>
+                                    <span class="stat-icon">MAX</span>
                                 </div>
                                 <div class="stat-value" id="statMax">-</div>
-                                <p class="stat-subtitle">Pire scénario</p>
+                                <p class="stat-subtitle">Pire scenario</p>
                             </div>
                         </div>
 
@@ -234,7 +217,7 @@
 
                         <!-- Empty State -->
                         <div class="empty-state" id="emptyState">
-                            <div class="empty-icon">📊</div>
+                            <div class="empty-icon"></div>
                             <h4 class="empty-title">Aucune simulation</h4>
                             <p class="empty-text">Configurez les paramètres et lancez une simulation pour voir les résultats</p>
                         </div>
@@ -251,6 +234,9 @@
 
     <!-- Scripts -->
     <script src="config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profiles.js"></script>
+    <script src="js/sinistres.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

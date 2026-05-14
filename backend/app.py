@@ -10,9 +10,34 @@ from flask_cors import CORS
 import numpy as np
 from datetime import datetime
 import json
+import os
+from models import db, User, Simulation, Profile
 
 app = Flask(__name__)
+
+# Configuration SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///simulateur.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JSON_SORT_KEYS'] = False
+
+# Initialiser la base de données
+db.init_app(app)
+
+# Configuration CORS
 CORS(app)
+
+# ==================== INITIALISATION BASE DE DONNÉES ====================
+with app.app_context():
+    db.create_all()
+    # Créer un utilisateur par défaut si la table est vide
+    if User.query.first() is None:
+        default_user = User(
+            username='demo',
+            email='demo@example.com',
+            role='user'
+        )
+        db.session.add(default_user)
+        db.session.commit()
 
 # ==================== ROUTES HEALTH ====================
 @app.route('/api/health', methods=['GET'])
@@ -84,6 +109,168 @@ def info():
             'info': '/api/info'
         }
     }), 200
+
+# ==================== ROUTES SIMULATIONS ====================
+@app.route('/api/simulations/save', methods=['POST'])
+def save_simulation():
+    """Sauvegarder une simulation"""
+    try:
+        data = request.json
+        user_id = data.get('user_id', 1)  # Default user
+        
+        simulation = Simulation(
+            user_id=user_id,
+            num_simulations=data.get('num_simulations'),
+            sinistres_config=data.get('sinistres_config', {}),
+            statistics=data.get('statistics', {}),
+            statistics_by_type=data.get('statistics_by_type', {}),
+            histogram=data.get('histogram', {}),
+            name=data.get('name'),
+            description=data.get('description')
+        )
+        
+        db.session.add(simulation)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'simulation_id': simulation.id,
+            'message': 'Simulation sauvegardée'
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/simulations/<int:sim_id>', methods=['GET'])
+def get_simulation(sim_id):
+    """Récupérer une simulation"""
+    try:
+        simulation = Simulation.query.get(sim_id)
+        if not simulation:
+            return jsonify({'error': 'Simulation non trouvée'}), 404
+        
+        return jsonify(simulation.to_dict()), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/simulations', methods=['GET'])
+def list_simulations():
+    """Lister les simulations d'un utilisateur"""
+    try:
+        user_id = request.args.get('user_id', 1, type=int)
+        simulations = Simulation.query.filter_by(user_id=user_id).order_by(Simulation.created_at.desc()).all()
+        
+        return jsonify({
+            'success': True,
+            'count': len(simulations),
+            'simulations': [sim.to_dict() for sim in simulations]
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/simulations/<int:sim_id>', methods=['DELETE'])
+def delete_simulation(sim_id):
+    """Supprimer une simulation"""
+    try:
+        simulation = Simulation.query.get(sim_id)
+        if not simulation:
+            return jsonify({'error': 'Simulation non trouvée'}), 404
+        
+        db.session.delete(simulation)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Simulation supprimée'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+# ==================== ROUTES PROFILES ====================
+@app.route('/api/profiles', methods=['POST'])
+def create_profile():
+    """Créer un profil de simulation"""
+    try:
+        data = request.json
+        user_id = data.get('user_id', 1)
+        
+        profile = Profile(
+            user_id=user_id,
+            name=data.get('name'),
+            description=data.get('description'),
+            domain=data.get('domain'),
+            default_num_simulations=data.get('default_num_simulations', 10000),
+            sinistres_config=data.get('sinistres_config', {}),
+            is_default=data.get('is_default', False)
+        )
+        
+        db.session.add(profile)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'profile_id': profile.id,
+            'message': 'Profil créé'
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/profiles/<int:profile_id>', methods=['GET'])
+def get_profile(profile_id):
+    """Récupérer un profil"""
+    try:
+        profile = Profile.query.get(profile_id)
+        if not profile:
+            return jsonify({'error': 'Profil non trouvé'}), 404
+        
+        return jsonify(profile.to_dict()), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/profiles', methods=['GET'])
+def list_profiles():
+    """Lister les profils d'un utilisateur"""
+    try:
+        user_id = request.args.get('user_id', 1, type=int)
+        profiles = Profile.query.filter_by(user_id=user_id).all()
+        
+        return jsonify({
+            'success': True,
+            'count': len(profiles),
+            'profiles': [p.to_dict() for p in profiles]
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/profiles/<int:profile_id>', methods=['DELETE'])
+def delete_profile(profile_id):
+    """Supprimer un profil"""
+    try:
+        profile = Profile.query.get(profile_id)
+        if not profile:
+            return jsonify({'error': 'Profil non trouvé'}), 404
+        
+        db.session.delete(profile)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Profil supprimé'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 # ==================== FONCTIONS UTILITAIRES ====================
 def perform_monte_carlo_sinistres(sinistres_config, num_simulations):
@@ -265,28 +452,6 @@ def login():
 def logout():
     """Déconnexion utilisateur"""
     return jsonify({'success': True, 'message': 'Logged out'}), 200
-
-# ==================== ROUTES PROFILES ====================
-@app.route('/api/profiles', methods=['GET'])
-def get_profiles():
-    """Récupère les profils utilisateur"""
-    return jsonify({
-        'profiles': [
-            {'id': 1, 'name': 'Prudent', 'risk_level': 'low', 'lambda': 2, 'mu': 800},
-            {'id': 2, 'name': 'Modéré', 'risk_level': 'medium', 'lambda': 5, 'mu': 1000},
-            {'id': 3, 'name': 'Agressif', 'risk_level': 'high', 'lambda': 10, 'mu': 1500}
-        ]
-    }), 200
-
-@app.route('/api/profiles', methods=['POST'])
-def create_profile():
-    """Crée un nouveau profil"""
-    data = request.json
-    return jsonify({
-        'success': True,
-        'profile': data,
-        'id': 4
-    }), 201
 
 # ==================== ROUTES SINISTRES ====================
 @app.route('/api/sinistres/default', methods=['GET'])

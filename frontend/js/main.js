@@ -199,7 +199,14 @@ async function handleFormSubmit(e) {
  */
 document.addEventListener('DOMContentLoaded', initApp);
 
+// Exposer les fonctions à window pour les rendre globales
+if (typeof window !== 'undefined') {
+    window.switchSection = switchSection;
+    window.setupMenuListeners = setupMenuListeners;
+    window.loadSimulationHistory = loadSimulationHistory;
+}
+
 // Export
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { initApp, setupEventListeners, handleFormSubmit };
+    module.exports = { initApp, setupEventListeners, handleFormSubmit, switchSection, setupMenuListeners };
 }

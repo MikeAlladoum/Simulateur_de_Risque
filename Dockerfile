@@ -6,15 +6,14 @@ WORKDIR /app
 # Copy requirements
 COPY backend/requirements.txt .
 
-# Install dependencies (remove gunicorn, use Flask directly)
-RUN pip install --no-cache-dir Flask==3.0.0 Flask-CORS==4.0.0 Flask-SQLAlchemy==3.1.1 numpy>=1.26.0
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application
 COPY backend/ .
 
 # Environment
 ENV FLASK_ENV=production
-ENV PORT=8000
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000

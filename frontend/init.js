@@ -7,12 +7,15 @@
 const _hostname = window.location.hostname;
 const _isDev = (_hostname === 'localhost' || _hostname === '127.0.0.1');
 
+// URL du backend Railway
+const _RAILWAY_BACKEND_URL = 'https://simulateur-backend-production-6239.up.railway.app';
+
 // Variables globales SANS dépendances
 window.DEBUG = false;
 window.CONFIG = {
     ENVIRONMENT: _isDev ? 'development' : 'production',
     API: {
-        BASE_URL: _isDev ? 'http://localhost:5000/api' : (window.location.origin + '/api'),
+        BASE_URL: _isDev ? 'http://localhost:5000/api' : (_RAILWAY_BACKEND_URL + '/api'),
         ENDPOINTS: {
             HEALTH: '/health',
             SIMULATE: '/simulate',

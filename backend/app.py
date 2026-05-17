@@ -517,10 +517,11 @@ def server_error(error):
 if __name__ == '__main__':
     import sys
     
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
+    # Récupérer le port depuis l'environnement (Railway/Render) ou l'argument CLI
+    port = int(os.environ.get('PORT', sys.argv[1] if len(sys.argv) > 1 else 5000))
     debug = '--debug' in sys.argv or '-d' in sys.argv
     
-    print(f"🚀 Serveur démarrant sur http://localhost:{port}")
+    print(f"🚀 Serveur démarrant sur http://0.0.0.0:{port}")
     print(f"Mode debug: {debug}")
     print(f"📚 Documentation API: http://localhost:{port}/api/info")
     

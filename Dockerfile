@@ -3,23 +3,21 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Copy requirements first for better caching
+# Copy requirements
 COPY backend/requirements.txt .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies (remove gunicorn, use Flask directly)
+RUN pip install --no-cache-dir Flask==3.0.0 Flask-CORS==4.0.0 Flask-SQLAlchemy==3.1.1 numpy>=1.26.0
 
 # Copy application
 COPY backend/ .
 
-# Set environment variables
-ENV FLASK_APP=app.py
+# Environment
 ENV FLASK_ENV=production
 ENV PORT=8000
 ENV PYTHONUNBUFFERED=1
 
-# Expose port
 EXPOSE 8000
 
-# Run with gunicorn
-CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=2", "--threads=2", "--worker-class=gthread", "--timeout=60", "--access-logfile=-", "--error-logfile=-", "wsgi:app"]
+# Run Flask directly
+CMD ["python", "app.py"]

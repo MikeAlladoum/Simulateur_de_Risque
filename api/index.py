@@ -6,7 +6,6 @@ Relaye les appels API vers le backend Flask
 import os
 import json
 import requests
-from typing import Callable
 
 # URL du backend Flask
 BACKEND_URL = os.environ.get('BACKEND_URL', 'http://localhost:5000')
@@ -14,7 +13,7 @@ BACKEND_URL = os.environ.get('BACKEND_URL', 'http://localhost:5000')
 
 def handler(request):
     """
-    Fonction handler callable pour Vercel
+    Fonction handler pour Vercel
     """
     try:
         # Récupérer la méthode HTTP
@@ -45,7 +44,20 @@ def handler(request):
             elif hasattr(request, 'data'):
                 body = request.data
         
-        # Faire l'appel au backend selon la méthode
+        # OPTIONS preflight
+        if method == 'OPTIONS':
+            return {
+                'statusCode': 200,
+                'body': '',
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    'Content-Type': 'text/plain'
+                }
+            }
+        
+        # Faire l'appel au backend
         try:
             if method == 'GET':
                 response = requests.get(backend_url, headers=headers, timeout=30)
@@ -55,16 +67,6 @@ def handler(request):
                 response = requests.put(backend_url, data=body, headers=headers, timeout=30)
             elif method == 'DELETE':
                 response = requests.delete(backend_url, headers=headers, timeout=30)
-            elif method == 'OPTIONS':
-                return {
-                    'statusCode': 200,
-                    'headers': {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-                        'Content-Type': 'text/plain'
-                    }
-                }
             else:
                 return {
                     'statusCode': 405,
@@ -75,12 +77,22 @@ def handler(request):
                     }
                 }
             
+            # Préparer le body de réponse
+            response_body = response.text if response.text else '{}'
+            
+            # S'assurer que c'est du JSON valide
+            try:
+                json.loads(response_body)
+            except:
+                # Si ce n'est pas du JSON, wrapper dans du JSON
+                response_body = json.dumps({'body': response_body})
+            
             # Retourner la réponse du backend
             return {
                 'statusCode': response.status_code,
-                'body': response.text,
+                'body': response_body,
                 'headers': {
-                    'Content-Type': response.headers.get('Content-Type', 'application/json'),
+                    'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization'
@@ -90,7 +102,7 @@ def handler(request):
         except requests.exceptions.Timeout:
             return {
                 'statusCode': 504,
-                'body': json.dumps({'error': 'Backend timeout'}),
+                'body': json.dumps({'error': 'Backend timeout', 'backend': BACKEND_URL}),
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
@@ -100,7 +112,7 @@ def handler(request):
         except requests.exceptions.ConnectionError as e:
             return {
                 'statusCode': 503,
-                'body': json.dumps({'error': 'Backend unavailable', 'details': str(e)}),
+                'body': json.dumps({'error': 'Backend unavailable', 'backend': BACKEND_URL}),
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'

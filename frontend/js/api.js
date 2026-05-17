@@ -36,14 +36,34 @@ class APIClient {
 
             clearTimeout(timeoutId);
 
+            // Vérifier le statut HTTP
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
+                try {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
+                } catch (parseError) {
+                    throw new Error(`Erreur HTTP ${response.status}`);
+                }
             }
 
-            return await response.json();
+            // Récupérer le texte de la réponse
+            const text = await response.text();
+            
+            // Si la réponse est vide, retourner un objet vide
+            if (!text) {
+                return {};
+            }
+            
+            // Parser le JSON
+            try {
+                return JSON.parse(text);
+            } catch (parseError) {
+                log('ERROR', 'Invalid JSON response:', text);
+                throw new Error('Réponse serveur invalide');
+            }
         } catch (error) {
             clearTimeout(timeoutId);
+            log('ERROR', 'API request error:', error.message);
             throw error;
         }
     }

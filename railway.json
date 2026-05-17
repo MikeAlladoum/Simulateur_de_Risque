@@ -1,9 +1,7 @@
 {
   "build": {
-    "builder": "DOCKERFILE"
-  },
-  "deploy": {
-    "startCommand": "cd /app && python app.py"
+    "builder": "NIXPACKS"
   }
 }
+
 

@@ -6,8 +6,6 @@ Relaye les appels API vers le backend Flask
 import os
 import json
 import requests
-from http.server import BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
 
 # URL du backend Flask
 BACKEND_URL = os.environ.get('BACKEND_URL', 'http://localhost:5000')

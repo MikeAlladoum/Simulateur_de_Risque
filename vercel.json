@@ -1,16 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "echo 'No build needed'",
   "builds": [
     {
-      "src": "api/handler.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/handler.py?endpoint=$1"
+      "dest": "/api/index.py?endpoint=$1"
     },
     {
       "src": "/static/(.*)",

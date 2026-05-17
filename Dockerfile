@@ -1,4 +1,4 @@
-# Build stage
+# Backend Python API
 FROM python:3.9-slim
 
 WORKDIR /app
@@ -7,8 +7,7 @@ WORKDIR /app
 COPY backend/requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir gunicorn
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application
 COPY backend/ .
@@ -22,9 +21,5 @@ ENV PYTHONUNBUFFERED=1
 # Expose port
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')" || exit 1
-
-# Run with gunicorn for better production reliability
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-", "wsgi:app"]
+# Run with gunicorn
+CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=2", "--threads=2", "--worker-class=gthread", "--timeout=60", "--access-logfile=-", "--error-logfile=-", "wsgi:app"]

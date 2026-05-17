@@ -230,6 +230,20 @@
                             </div>
                         </div>
 
+                        <!-- Actions Buttons -->
+                        <div class="actions-section" id="actionsSection" style="display: none;">
+                            <div class="actions-container">
+                                <button type="button" id="saveSimulationBtn" class="action-button save-button">
+                                    <span class="button-icon">💾</span>
+                                    <span class="button-text">Enregistrer cette simulation</span>
+                                </button>
+                                <button type="button" id="resetBtn" class="action-button reset-button">
+                                    <span class="button-icon">🔄</span>
+                                    <span class="button-text">Réinitialiser</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- Empty State -->
                         <div class="empty-state" id="emptyState">
                             <div class="empty-icon"></div>
@@ -312,6 +326,34 @@
     
     <!-- Main app (charge après toutes les dépendances) -->
     <script src="js/main.js?v=2"></script>
+    <script src="js/save-modal.js?v=1"></script>
     <script src="js/app.js?v=3"></script>
+
+    <!-- MODAL: Save Simulation -->
+    <div id="saveModal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Enregistrer la Simulation</h2>
+                <button type="button" class="modal-close" onclick="closeModalSave()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="saveForm" onsubmit="submitSaveForm(event)">
+                    <div class="modal-group">
+                        <label class="modal-label">Nom de la simulation</label>
+                        <input type="text" id="simName" class="modal-input" placeholder="Ex: Assurance Santé - Scénario 1" required>
+                    </div>
+                    <div class="modal-group">
+                        <label class="modal-label">Description (optionnel)</label>
+                        <textarea id="simDescription" class="modal-input modal-textarea" placeholder="Décrivez cette simulation..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="modal-button cancel-button" onclick="closeModalSave()">Annuler</button>
+                        <button type="submit" class="modal-button save-button">💾 Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

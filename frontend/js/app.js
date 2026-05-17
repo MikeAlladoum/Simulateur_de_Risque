@@ -283,6 +283,19 @@ function displayResults(data) {
     } else {
         console.warn('⚠️ No histogram data');
     }
+    
+    // AFFICHER LES BOUTONS D'ACTIONS
+    const actionsSection = document.getElementById('actionsSection');
+    if (actionsSection) {
+        actionsSection.style.display = 'block';
+    }
+    
+    // Attacher les event listeners aux boutons d'actions
+    const saveBtn = document.getElementById('saveSimulationBtn');
+    if (saveBtn) {
+        saveBtn.removeEventListener('click', openModalSave);
+        saveBtn.addEventListener('click', openModalSave);
+    }
 }
 
 function displayStatisticsBySinistre(statsByType) {

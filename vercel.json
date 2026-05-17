@@ -1,16 +1,7 @@
 {
   "version": 2,
-  "env": {
-    "BACKEND_URL": "@backend_url"
-  },
-  "envVars": {
-    "BACKEND_URL": "https://votre-backend-xxx.onrender.com"
-  },
+  "buildCommand": "echo 'No build needed'",
   "builds": [
-    {
-      "src": "frontend/index.html",
-      "use": "@vercel/static"
-    },
     {
       "src": "api/handler.py",
       "use": "@vercel/python"
@@ -30,7 +21,11 @@
       "dest": "/frontend/js/$1"
     },
     {
-      "src": "/(.*\\..*)",
+      "src": "/login.html",
+      "dest": "/frontend/login.html"
+    },
+    {
+      "src": "/(.*\\.\\w+)$",
       "dest": "/frontend/$1"
     },
     {

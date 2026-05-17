@@ -159,6 +159,22 @@
                                     <p class="input-help">Plus élevé = plus précis mais plus lent (100-1000000)</p>
                                 </div>
 
+                                <!-- Distribution Selection -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span class="label-text">Distribution statistique</span>
+                                        <span class="label-hint">Modèle</span>
+                                    </label>
+                                    <div class="input-container">
+                                        <select id="distributionSelect" name="distribution" class="form-input form-select" style="cursor: pointer;">
+                                            <option value="lognormal" selected>Lognormale (par défaut)</option>
+                                            <option value="normal">Normale (Gaussian)</option>
+                                            <option value="uniform">Uniforme</option>
+                                        </select>
+                                    </div>
+                                    <p class="input-help">Lognormale: pour les pertes asymétriques | Normale: pour données centrées | Uniforme: pour distribution régulière</p>
+                                </div>
+
                                 <!-- Submit Button -->
                                 <button type="submit" class="btn-simulate" id="submitBtn">
                                     <span class="btn-label">Lancer la simulation</span>

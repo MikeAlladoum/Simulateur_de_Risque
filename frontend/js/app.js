@@ -187,6 +187,8 @@ async function handleFormSubmit() {
         // Appel API
         console.log('Calling API with multiple sinistres...');
         const token = AUTH.getToken();
+        const distribution = document.getElementById('distributionSelect').value || 'lognormal';
+        
         const response = await fetch(`${API_BASE_URL}/simulate`, {
             method: 'POST',
             headers: {
@@ -195,7 +197,8 @@ async function handleFormSubmit() {
             },
             body: JSON.stringify({
                 num_simulations: numSimulations,
-                sinistres: sinistresConfig
+                sinistres: sinistresConfig,
+                distribution: distribution
             })
         });
         

@@ -13,7 +13,15 @@ const AUTH = {
      */
     async login(username, password) {
         try {
-            const response = await fetch(`${CONFIG.API.BASE_URL.replace('/api', '')}/api/auth/login`, {
+            // Construire l'URL complète
+            const baseUrl = CONFIG.API.BASE_URL.endsWith('/api') 
+                ? CONFIG.API.BASE_URL.replace('/api', '')
+                : CONFIG.API.BASE_URL;
+            const url = `${baseUrl}/api/auth/login`;
+            
+            log('INFO', 'Login URL:', url);
+            
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

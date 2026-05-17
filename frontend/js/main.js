@@ -129,15 +129,112 @@ async function loadSimulationHistory() {
         const historiqueListe = document.getElementById('historiqueListe');
         historiqueListe.innerHTML = '<p style="text-align: center; padding: 20px;">Chargement...</p>';
 
-        // TODO: Appeler l'API pour récupérer les simulations
-        // const simulations = await apiClient.getSimulations();
+        // Récupérer les simulations de l'API
+        const data = await apiClient.getSimulations();
+        const simulations = data.simulations || [];
 
-        // Placeholder
-        historiqueListe.innerHTML = '<p style="text-align: center; padding: 20px;">Aucune simulation sauvegardée pour le moment.</p>';
+        if (!simulations || simulations.length === 0) {
+            historiqueListe.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Aucune simulation sauvegardée pour le moment.</p>';
+            return;
+        }
+
+        // Construire le HTML pour afficher les simulations
+        let html = '<div style="padding: 20px;">';
+        html += '<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px;">';
+        html += '<thead style="background: #f0f0f0; border-bottom: 2px solid #ddd;">';
+        html += '<tr>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: bold;">Date</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: bold;">Nombre Simulations</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: bold;">Perte Moyenne</th>';
+        html += '<th style="padding: 12px; text-align: center; font-weight: bold;">Actions</th>';
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+
+        simulations.forEach((sim, idx) => {
+            const stats = sim.statistics || {};
+            const createdAt = new Date(sim.created_at).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            html += '<tr style="border-bottom: 1px solid #eee; hover: { background: #f9f9f9; }">';
+            html += `<td style="padding: 12px;">${createdAt}</td>`;
+            html += `<td style="padding: 12px;">${sim.num_simulations.toLocaleString('fr-FR')}</td>`;
+            html += `<td style="padding: 12px;">${(stats.mean || 0).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} FCFA</td>`;
+            html += `<td style="padding: 12px; text-align: center;">`;
+            html += `<button onclick="loadSimulationById(${sim.id})" style="padding: 6px 12px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 6px;">📂 Charger</button>`;
+            html += `<button onclick="deleteSimulationById(${sim.id})" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">🗑️ Supprimer</button>`;
+            html += `</td>`;
+            html += '</tr>';
+        });
+
+        html += '</tbody>';
+        html += '</table>';
+        html += '</div>';
+
+        historiqueListe.innerHTML = html;
 
     } catch (error) {
         log('[ERROR] Erreur lors du chargement de l\'historique:', error);
-        document.getElementById('historiqueListe').innerHTML = '<p style="color: red;">Erreur lors du chargement</p>';
+        document.getElementById('historiqueListe').innerHTML = '<p style="color: red; padding: 20px;">Erreur: ' + error.message + '</p>';
+    }
+}
+
+/**
+ * Charge une simulation par ID et l'affiche dans le simulateur
+ */
+async function loadSimulationById(simId) {
+    try {
+        log(`[HISTORY] Chargement de la simulation ${simId}`);
+        
+        const sim = await apiClient.getSimulation(simId);
+        
+        // Afficher les résultats
+        document.getElementById('sectionSimulateur').style.display = 'block';
+        document.getElementById('sectionHistorique').style.display = 'none';
+        
+        // Mettre à jour le menu
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+        document.querySelector('[data-section="simulateur"]').classList.add('active');
+        
+        // Afficher les stats sauvegardées
+        if (sim.statistics) {
+            displayStats(sim.statistics);
+        }
+        
+        log('[HISTORY] Simulation chargée avec succès');
+        
+    } catch (error) {
+        log('[ERROR] Erreur lors du chargement:', error);
+        alert('Erreur: ' + error.message);
+    }
+}
+
+/**
+ * Supprime une simulation
+ */
+async function deleteSimulationById(simId) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette simulation?')) {
+        return;
+    }
+    
+    try {
+        log(`[HISTORY] Suppression de la simulation ${simId}`);
+        
+        await apiClient.deleteSimulation(simId);
+        
+        log('[HISTORY] Simulation supprimée');
+        
+        // Recharger la liste
+        loadSimulationHistory();
+        
+    } catch (error) {
+        log('[ERROR] Erreur lors de la suppression:', error);
+        alert('Erreur: ' + error.message);
     }
 }
 

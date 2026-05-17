@@ -99,6 +99,50 @@ class APIClient {
             method: 'GET'
         });
     }
+
+    /**
+     * Récupère toutes les simulations de l'utilisateur
+     * @returns {Promise} Liste des simulations
+     */
+    async getSimulations() {
+        return this.request(CONFIG.API.ENDPOINTS.SIMULATIONS, {
+            method: 'GET'
+        });
+    }
+
+    /**
+     * Récupère une simulation spécifique
+     * @param {number} simId - ID de la simulation
+     * @returns {Promise} Données de la simulation
+     */
+    async getSimulation(simId) {
+        return this.request(`${CONFIG.API.ENDPOINTS.SIMULATIONS}/${simId}`, {
+            method: 'GET'
+        });
+    }
+
+    /**
+     * Sauvegarde une simulation
+     * @param {object} data - Données de la simulation
+     * @returns {Promise} Simulation sauvegardée
+     */
+    async saveSimulation(data) {
+        return this.request('/simulations/save', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    /**
+     * Supprime une simulation
+     * @param {number} simId - ID de la simulation
+     * @returns {Promise} Réponse suppression
+     */
+    async deleteSimulation(simId) {
+        return this.request(`${CONFIG.API.ENDPOINTS.SIMULATIONS}/${simId}`, {
+            method: 'DELETE'
+        });
+    }
 }
 
 // Instance globale

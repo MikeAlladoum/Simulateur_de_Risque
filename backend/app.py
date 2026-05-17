@@ -5,13 +5,30 @@ Backend API - Simulateur de Risques Financiers
 API Flask pour les simulations Monte Carlo
 """
 
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import numpy as np
-from datetime import datetime
-import json
-import os
-from models import db, User, Simulation, Profile
+import sys
+import logging
+
+# Configure logging FIRST
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
+logger = logging.getLogger(__name__)
+
+try:
+    from flask import Flask, request, jsonify
+    from flask_cors import CORS
+    import numpy as np
+    from datetime import datetime
+    import json
+    import os
+    from models import db, User, Simulation, Profile
+    
+    logger.info("✅ All imports successful")
+except Exception as e:
+    logger.error(f"❌ Import failed: {str(e)}", exc_info=True)
+    sys.exit(1)
 
 app = Flask(__name__)
 
@@ -20,6 +37,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JSON_SORT_KEYS'] = False
 
+logger.info(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+
 # Initialiser la base de données
 db.init_app(app)
 
@@ -27,17 +46,28 @@ db.init_app(app)
 CORS(app)
 
 # ==================== INITIALISATION BASE DE DONNÉES ====================
-with app.app_context():
-    db.create_all()
-    # Créer un utilisateur par défaut si la table est vide
-    if User.query.first() is None:
-        default_user = User(
-            username='demo',
-            email='demo@example.com',
-            role='user'
-        )
-        db.session.add(default_user)
-        db.session.commit()
+try:
+    with app.app_context():
+        logger.info("Creating database tables...")
+        db.create_all()
+        logger.info("✅ Database tables created/verified")
+        
+        # Créer un utilisateur par défaut si la table est vide
+        if User.query.first() is None:
+            logger.info("Creating default user...")
+            default_user = User(
+                username='demo',
+                email='demo@example.com',
+                role='user'
+            )
+            db.session.add(default_user)
+            db.session.commit()
+            logger.info("✅ Default user created")
+        else:
+            logger.info("✅ Default user already exists")
+except Exception as e:
+    logger.error(f"❌ Database initialization failed: {str(e)}", exc_info=True)
+    # Don't exit - Flask can still serve health checks
 
 # ==================== ROUTES HEALTH ====================
 @app.route('/api/health', methods=['GET'])

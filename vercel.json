@@ -3,6 +3,9 @@
   "env": {
     "BACKEND_URL": "@backend_url"
   },
+  "envVars": {
+    "BACKEND_URL": "https://votre-backend-xxx.onrender.com"
+  },
   "builds": [
     {
       "src": "frontend/index.html",

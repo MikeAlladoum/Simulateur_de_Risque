@@ -90,19 +90,13 @@ function setupMenuListeners() {
 function switchSection(sectionName) {
     log(`[MENU] Passage à la section: ${sectionName}`);
 
-    // Cacher toutes les sections
+    // Masquer toutes les sections
     document.getElementById('sectionSimulateur').style.display = 'none';
     
     const historique = document.getElementById('sectionHistorique');
     const parametres = document.getElementById('sectionParametres');
     if (historique) historique.style.display = 'none';
     if (parametres) parametres.style.display = 'none';
-
-    // Cacher/Afficher la page intro
-    const pageIntro = document.querySelector('.page-intro');
-    if (pageIntro) {
-        pageIntro.style.display = (sectionName === 'simulateur') ? 'block' : 'none';
-    }
 
     // Afficher la section sélectionnée
     if (sectionName === 'simulateur') {
@@ -205,14 +199,7 @@ async function handleFormSubmit(e) {
  */
 document.addEventListener('DOMContentLoaded', initApp);
 
-// Exposer les fonctions à window pour les rendre globales
-if (typeof window !== 'undefined') {
-    window.switchSection = switchSection;
-    window.setupMenuListeners = setupMenuListeners;
-    window.loadSimulationHistory = loadSimulationHistory;
-}
-
 // Export
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { initApp, setupEventListeners, handleFormSubmit, switchSection, setupMenuListeners };
+    module.exports = { initApp, setupEventListeners, handleFormSubmit };
 }

@@ -267,47 +267,47 @@
                             <p class="empty-text">Configurez les paramètres et lancez une simulation pour voir les résultats</p>
                         </div>
                     </section>
-
-                    <!-- Section HISTORIQUE -->
-                    <section class="main-section" id="sectionHistorique" style="display: none;">
-                        <div class="section-header">
-                            <h2 class="section-title">Historique des Simulations</h2>
-                            <p class="section-description">Consultez vos précédentes simulations et leurs résultats</p>
-                        </div>
-                        
-                        <div class="results-container">
-                            <div id="historiqueListe" class="simulations-list">
-                                <!-- Les simulations seront chargées ici -->
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Section PARAMÈTRES -->
-                    <section class="main-section" id="sectionParametres" style="display: none;">
-                        <div class="section-header">
-                            <h2 class="section-title">Paramètres</h2>
-                            <p class="section-description">Configurez les paramètres de l'application</p>
-                        </div>
-                        
-                        <div class="settings-container">
-                            <div class="settings-card">
-                                <h3>Paramètres Globaux</h3>
-                                <div class="settings-group">
-                                    <label>Nombre de simulations par défaut</label>
-                                    <input type="number" id="defaultSimulations" min="100" max="1000000" value="10000">
-                                </div>
-                                <div class="settings-group">
-                                    <label>Thème</label>
-                                    <select id="themeSelect">
-                                        <option value="dark">Sombre (par défaut)</option>
-                                        <option value="light">Clair</option>
-                                    </select>
-                                </div>
-                                <button id="saveparametresBtn" class="btn btn-primary">💾 Enregistrer</button>
-                            </div>
-                        </div>
-                    </section>
                 </div>
+
+                <!-- Section HISTORIQUE -->
+                <section class="main-section" id="sectionHistorique" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">Historique des Simulations</h2>
+                        <p class="section-description">Consultez vos précédentes simulations et leurs résultats</p>
+                    </div>
+                    
+                    <div class="results-container">
+                        <div id="historiqueListe" class="simulations-list">
+                            <!-- Les simulations seront chargées ici -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section PARAMÈTRES -->
+                <section class="main-section" id="sectionParametres" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">Paramètres</h2>
+                        <p class="section-description">Configurez les paramètres de l'application</p>
+                    </div>
+                    
+                    <div class="settings-container">
+                        <div class="settings-card">
+                            <h3>Paramètres Globaux</h3>
+                            <div class="settings-group">
+                                <label>Nombre de simulations par défaut</label>
+                                <input type="number" id="defaultSimulations" min="100" max="1000000" value="10000">
+                            </div>
+                            <div class="settings-group">
+                                <label>Thème</label>
+                                <select id="themeSelect">
+                                    <option value="dark">Sombre (par défaut)</option>
+                                    <option value="light">Clair</option>
+                                </select>
+                            </div>
+                            <button id="saveparametresBtn" class="btn btn-primary">💾 Enregistrer</button>
+                        </div>
+                    </div>
+                </section>
             </main>
 
             <!-- FOOTER -->

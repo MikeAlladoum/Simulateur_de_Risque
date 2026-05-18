@@ -40,7 +40,8 @@ const AUTH = {
             
             // Stockage du token et de l'utilisateur
             localStorage.setItem(AUTH.TOKEN_KEY, data.access_token);
-            localStorage.setItem(AUTH.USER_KEY, data.user);
+            // Store username string instead of user object
+            localStorage.setItem(AUTH.USER_KEY, data.user.username || data.user);
             
             return {
                 success: true,
